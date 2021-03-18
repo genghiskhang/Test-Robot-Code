@@ -18,8 +18,12 @@ import edu.wpi.first.wpilibj.XboxController;
  * directory.
  */
 public class Robot extends TimedRobot {
-  private final SpeedControllerGroup left_motor = new SpeedControllerGroup(new Talon(2), new Talon(3));
-  private final SpeedControllerGroup right_motor = new SpeedControllerGroup(new Talon(1), new Talon(0));
+  private final Talon frontRightMotor = new Talon(0);
+  private final Talon backRightMotor = new Talon(1);
+  private final Talon frontLeftMotor = new Talon(3);
+  private final Talon backLeftMotor = new Talon(2);
+  private final SpeedControllerGroup left_motor = new SpeedControllerGroup(backLeftMotor, frontLeftMotor);
+  private final SpeedControllerGroup right_motor = new SpeedControllerGroup(backRightMotor, frontRightMotor);
   private final DifferentialDrive m_robotDrive = new DifferentialDrive(left_motor, right_motor);
   private final XboxController m_stick = new XboxController(0);
   private final Timer m_timer = new Timer();
@@ -36,7 +40,14 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     if (m_timer.get() < 2.0) {
       m_robotDrive.arcadeDrive(0.5, 0.0); // drive forwards half speed
-    } else {
+    } 
+    else if (m_timer.get() >= 2.0 && m_timer.get() < 4.0) {
+      m_robotDrive.arcadeDrive(0.0, 0.5);
+    }
+    else if (m_timer.get() >= 4.0 && m_timer.get() < 5.0) {
+      m_robotDrive.arcadeDrive(0.5, 0.0);
+    }
+    else {
       m_robotDrive.stopMotor(); // stop robot
     }
   }
@@ -49,11 +60,12 @@ public class Robot extends TimedRobot {
     m_robotDrive.arcadeDrive(m_stick.getY() * -1, m_stick.getX());
   }
 
+
   public void testInit() {
     
   }
 
   public void testPeriodic() {
-
+ 
   }
 }
